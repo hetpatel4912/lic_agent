@@ -1,0 +1,10 @@
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.csproj.AssemblyReference.cache
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.GeneratedMSBuildEditorConfig.editorconfig
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.AssemblyInfoInputs.cache
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.AssemblyInfo.cs
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.csproj.CoreCompileInputs.cache
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.MvcApplicationPartsAssemblyInfo.cache
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.RazorAssemblyInfo.cache
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.RazorAssemblyInfo.cs
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net8.0\LIC.sourcelink.json

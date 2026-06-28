@@ -98,3 +98,4 @@ D:\Het\Temporary Folder\Amit\LIC\bin\Debug\net10.0\Npgsql.dll
 D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net10.0\LIC.csproj.AssemblyReference.cache
 D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net10.0\LIC.csproj.Up2Date
 D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net10.0\compressed\h3chetxfhj-{0}-etyxjkchev-etyxjkchev.gz
+D:\Het\Temporary Folder\Amit\LIC\obj\Debug\net10.0\LIC.sourcelink.json
