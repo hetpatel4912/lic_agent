@@ -1,0 +1,135 @@
+@{
+    ViewData["Title"] = "My Policies";
+}
+
+<section class="customer-policy-page">
+    <div class="customer-policy-hero">
+        <div>
+            <p class="eyebrow">My LIC policies</p>
+            <h1>Find your policy premium details by mobile number.</h1>
+            <p>Enter the mobile number registered with your policy to view policy number, holder name, premium date, and premium amount.</p>
+        </div>
+
+        <form class="policy-search-card" id="policySearchForm">
+            <label for="mobileNumberSearch">
+                Registered mobile number
+                <input class="form-control" type="tel" id="mobileNumberSearch" name="mobile" placeholder="Enter mobile number" inputmode="numeric" required />
+            </label>
+            <button class="button primary full" id="searchPolicyButton" type="submit">Get My Policies</button>
+        </form>
+    </div>
+
+    <div class="alert d-none" id="policyLookupMessage" role="alert"></div>
+    <div class="policy-card-grid customer-policy-grid" id="customerPolicyGrid" aria-live="polite">
+        <div class="policy-empty">Your policies will appear here after search.</div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function () {
+            const form = $("#policySearchForm");
+            const grid = $("#customerPolicyGrid");
+            const button = $("#searchPolicyButton");
+            const message = $("#policyLookupMessage");
+
+            function formatCurrency(value) {
+                return Number(value).toLocaleString("en-IN", {
+                    style: "currency",
+                    currency: "INR",
+                    maximumFractionDigits: 0
+                });
+            }
+
+            function formatDate(value) {
+                return new Date(value).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                });
+            }
+
+            function escapeHtml(value) {
+                return $("<div>").text(value ?? "").html();
+            }
+
+            function showMessage(text, type) {
+                message
+                    .removeClass("d-none alert-success alert-danger alert-info")
+                    .addClass(type === "success" ? "alert-success" : type === "info" ? "alert-info" : "alert-danger")
+                    .text(text);
+            }
+
+            function hideMessage() {
+                message.addClass("d-none").text("");
+            }
+
+            function policyCard(policy) {
+                return `
+                    <article class="policy-card">
+                        <div class="policy-card-header">
+                            <span>Policy No.</span>
+                            <strong>${escapeHtml(policy.policyNumber)}</strong>
+                        </div>
+                        <div class="policy-holder">
+                            <span>Policy Holder</span>
+                            <strong>${escapeHtml(policy.policyHolderName)}</strong>
+                        </div>
+                        <dl class="policy-details">
+                            <div>
+                                <dt>Mobile Number</dt>
+                                <dd>${escapeHtml(policy.mobileNumber)}</dd>
+                            </div>
+                            <div>
+                                <dt>Premium Date</dt>
+                                <dd>${formatDate(policy.premiumDate)}</dd>
+                            </div>
+                            <div>
+                                <dt>Premium Amount</dt>
+                                <dd>${formatCurrency(policy.premiumAmount)}</dd>
+                            </div>
+                        </dl>
+                    </article>`;
+            }
+
+            form.on("submit", function (event) {
+                event.preventDefault();
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                const mobile = $("#mobileNumberSearch").val().trim();
+
+                hideMessage();
+                button.prop("disabled", true).text("Searching...");
+                grid.html("<div class='policy-empty'>Searching your policies...</div>");
+
+                $.ajax({
+                    url: "/getmypolicies/search",
+                    method: "GET",
+                    data: { mobile: mobile },
+                    success: function (policies) {
+                        if (!policies.length) {
+                            grid.html("<div class='policy-empty'>No policies found for this mobile number.</div>");
+                            showMessage("No matching policy found. Please check the mobile number and try again.", "info");
+                            return;
+                        }
+
+                        grid.html(policies.map(policyCard).join(""));
+                        showMessage(`${policies.length} policy${policies.length > 1 ? "ies" : ""} found.`, "success");
+                    },
+                    error: function (xhr) {
+                        const response = xhr.responseJSON;
+                        grid.html("<div class='policy-empty'>Unable to load policy details right now.</div>");
+                        showMessage(response?.message || "Unable to search policies. Please try again.", "error");
+                    },
+                    complete: function () {
+                        button.prop("disabled", false).text("Get My Policies");
+                    }
+                });
+            });
+        });
+    </script>
+}

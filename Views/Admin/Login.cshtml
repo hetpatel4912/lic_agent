@@ -1,0 +1,83 @@
+@{
+    ViewData["Title"] = "Admin Login";
+}
+
+<section class="admin-login-page">
+    <div class="login-shell">
+        <div class="login-copy">
+            <p class="eyebrow">Admin access</p>
+            <h1>Manage LIC policy reminders with a cleaner dashboard.</h1>
+            <p>Sign in to view premium dates, holder details, mobile numbers, and add new policy cards.</p>
+        </div>
+
+        <form class="login-card" id="adminLoginForm">
+            <div>
+                <p class="eyebrow">Secure login</p>
+                <h2>Welcome back</h2>
+            </div>
+
+            <div class="alert d-none" id="loginMessage" role="alert"></div>
+
+            <label for="username">
+                Username
+                <input class="form-control" type="text" id="username" name="Username" placeholder="Enter username" autocomplete="username" required />
+            </label>
+
+            <label for="password">
+                Password
+                <input class="form-control" type="password" id="password" name="Password" placeholder="Enter password" autocomplete="current-password" required />
+            </label>
+
+            <button class="button primary full" id="loginButton" type="submit">
+                Login
+            </button>
+        </form>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(function () {
+            const form = $("#adminLoginForm");
+            const button = $("#loginButton");
+            const message = $("#loginMessage");
+
+            function showMessage(text, type) {
+                message
+                    .removeClass("d-none alert-success alert-danger")
+                    .addClass(type === "success" ? "alert-success" : "alert-danger")
+                    .text(text);
+            }
+
+            form.on("submit", function (event) {
+                event.preventDefault();
+
+                if (!this.checkValidity()) {
+                    this.reportValidity();
+                    return;
+                }
+
+                button.prop("disabled", true).text("Logging in...");
+
+                $.ajax({
+                    url: "/Admin/Login",
+                    method: "POST",
+                    data: form.serialize(),
+                    success: function (result) {
+                        showMessage(result.message || "Login successful.", "success");
+                        window.setTimeout(function () {
+                            window.location.href = "/Admin/Index";
+                        }, 700);
+                    },
+                    error: function (xhr) {
+                        const response = xhr.responseJSON;
+                        showMessage(response?.message || "Unable to login. Please try again.", "error");
+                    },
+                    complete: function () {
+                        button.prop("disabled", false).text("Login");
+                    }
+                });
+            });
+        });
+    </script>
+}
